@@ -1,0 +1,27 @@
+{
+  "name": "lefunne",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@discordjs/builders": "^1.6.3",
+    "axios": "^1.4.0",
+    "canvas": "^2.11.2",
+    "discord-player": "^6.6.1",
+    "discord.js": "^14.11.0",
+    "dog-facts": "^1.0.3",
+    "ffmpeg": "^0.0.4",
+    "fs": "^0.0.1-security",
+    "node-fetch": "^3.3.1",
+    "node-retry": "^1.0.0",
+    "openai": "^3.2.1",
+    "sharp": "^0.32.1",
+    "ytdl-core": "^4.11.4",
+    "ytpl": "^2.3.0"
+  }
+}
