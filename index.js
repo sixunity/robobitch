@@ -14,6 +14,7 @@ const dogFacts = require('dog-facts');
 const sharp = require('sharp');
 const config = require('./config.js');
 const token = config.token;
+const aitoken = config.openAiApiKey;
 
 
 
@@ -29,7 +30,7 @@ const client = new Client({
 });
 
 const targetChannelId = '1114697281975885884';
-const openAiApiKey = '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';
+const openAiApiKey = aitoken;
 
 const cuteEmoticons = [
   'ʕ•ᴥ•ʔ',
@@ -97,7 +98,7 @@ client.on('ready', async () => {
         .toJSON()
   ];
 
-  const rest = new REST({ version: '9' }).setToken('OTI3Mjc0MjIwMTg5Mjg2NDcw.G1K5OR.m7yd6WajXulQEciljN2WqgVTiYb_gRGIgOGXFQ');
+  const rest = new REST({ version: '9' }).setToken(token);
 
   try {
     await rest.put(
