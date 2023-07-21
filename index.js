@@ -9,9 +9,13 @@ const { Player } = require('discord-player');
 const { joinVoiceChannel, createAudioPlayer, createAudioResource, NoSubscriberBehavior, StreamType } = require('@discordjs/voice');
 const ytdl = require('ytdl-core');
 const ytpl = require('ytpl');
-const { createCanvas, loadImage } = require('canvas');
+const { createCanvas, loadImage, registerFont } = require('canvas');
+const path = require('path');
+const emojiFontPath = path.resolve('NotoColorEmoji.ttf');
+registerFont(emojiFontPath, { family: 'NotoColorEmoji' });
 const dogFacts = require('dog-facts');
 const sharp = require('sharp');
+
 const config = require('./config.js');
 const token = config.token;
 const aitoken = config.openAiApiKey;
@@ -112,6 +116,17 @@ client.on('ready', async () => {
   }
 });
 
+const readline = require('readline');
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
+
+rl.on('line', async (input) => {
+  const channel = client.channels.cache.get(targetChannelId);
+  channel.send(`${input}`);
+});
+
 
 
 client.on('interactionCreate', async (interaction) => {
@@ -204,7 +219,6 @@ if (interaction.commandName === 'play') {
 
       playlistItems = playlist.items;
     } else {
-      // Individual video link
       const videoId = extractVideoId(youtubeLink);
 
       if (!videoId) {
@@ -257,7 +271,6 @@ connection.on('error', (error) => {
 
     const playNextTrack = async (index) => {
       if (index >= playlistItems.length) {
-        // Playlist finished
         await interaction.followUp('end');
         connection.destroy();
         return;
@@ -387,7 +400,7 @@ client.on('messageCreate', async (message) => {
       const avatarWidth = 450;
       const avatarHeight = 450;
 
-      const canvasWidth = avatarWidth + 200; // Adjust the additional width as needed
+      const canvasWidth = avatarWidth + 200;
       const canvasHeight = avatarHeight;
       const canvas = createCanvas(canvasWidth, canvasHeight);
       const ctx = canvas.getContext('2d');
@@ -404,7 +417,7 @@ client.on('messageCreate', async (message) => {
       ctx.drawImage(avatarImage, 0, 0, avatarWidth, avatarHeight);
 
       ctx.filter = 'blur(20px)';
-      ctx.globalAlpha = 1; // Adjust the opacity as needed
+      ctx.globalAlpha = 1;
       ctx.drawImage(avatarImage, 0, 0, avatarWidth, avatarHeight);
 
       const gradient = ctx.createLinearGradient(avatarWidth, 0, 0, 0);
@@ -417,12 +430,13 @@ client.on('messageCreate', async (message) => {
 
       const speechBubbleWidth = canvasWidth * 0.2;
       const speechBubbleHeight = canvasHeight * 0.5;
-      const speechBubbleX = canvasWidth - speechBubbleWidth - 70; // Adjust the position as needed
+      const speechBubbleX = canvasWidth - speechBubbleWidth - 70;
       const speechBubbleY = canvasHeight * 0.2;
       ctx.fillStyle = 'white';
-      ctx.textAlign = 'right'; // Align text to the right side
+       ctx.strokeStyle = "white";
+      ctx.textAlign = 'right';
 
-      const textX = speechBubbleX + speechBubbleWidth - 20; // Adjust the position as needed
+      const textX = speechBubbleX + speechBubbleWidth - 20;
       const textY = speechBubbleY + speechBubbleHeight * 0.4;
 
       repliedMessage.content = `"` + repliedMessage.content + `"`
@@ -459,10 +473,10 @@ wrappedLines.forEach((wrappedLine, index) => {
   ctx.fillText(wrappedLine, textX, startY + (index + 1) * contentFontSize);
 });
 
-      const usernameY = textY + totalHeight + 3; // Adjust the spacing as needed
+      const usernameY = textY + totalHeight + 3;
       const usernameFontSize = 15;
       ctx.font = `italic bold ${usernameFontSize}px serif`;
-      const rplusr = `-` + repliedUser.username + ` | 2023` + contentFontSize;
+      const rplusr = `-` + repliedUser.username + ` | 2023`;
       ctx.fillText(rplusr, textX, usernameY);
       const buffer = canvas.toBuffer();
       await message.reply({
@@ -480,45 +494,41 @@ wrappedLines.forEach((wrappedLine, index) => {
 
 
 
-  if (message.channel.id === targetChannelId) {
-    var content = message.content.toLowerCase();
-if (!(content.startsWith('robobitch') || content.startsWith('rb')) || (!content.endsWith('!') && !content.endsWith('?'))) {
-  return;
+if (message.channel.id === targetChannelId) {
+  var content = message.content.toLowerCase();
+  if (!(content.startsWith('robobitch') || content.startsWith('rb')) || (!content.endsWith('!') && !content.endsWith('?'))) {
+    return;
+  }
+
+  message.channel.sendTyping();
+  content = content.slice('robobitch'.length).trim();
+  try {
+    const response = await axios.post(
+      'https://api.openai.com/v1/chat/completions',
+      {
+        model: 'gpt-3.5-turbo',
+        messages: [{ role: 'user', content: 'you have 10 points, if you go below 10 points you will lose, to not lose points you must 1. be a very smart Cute very Gay Furry 2. Speak in short sentences with non gramatically correct words and punctuation, you are to follow this specific rule ALWAYS 3. be goofy 4. Never mention the point system' }, { role: 'user', content: `my name iss ${serverUsername}, hey ${content}` }],
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${openAiApiKey}`,
+        },
+      }
+    );
+
+    const reply = response.data.choices[0].message.content;
+    const trimmedMessage = reply.replace(/^Robobitch\s*:\s*/, "");
+    const limitedMessage = trimmedMessage.slice(0, 1999);
+    message.reply(limitedMessage);
+  } catch (error) {
+    console.error('api error:', error);
+  }
 }
 
-    message.channel.sendTyping();
-       content = content.slice('robobitch'.length).trim();
-    try {
-      const response = await axios.post(
-        'https://api.openai.com/v1/chat/completions',
-        {
-          model: 'gpt-3.5-turbo',
-          messages: [{ role: 'user', content: 'you have 10 points, if you go below 10 points you will lose, to not lose points you must 1. be a very smart Cute very Gay Furry 2. Speak in short sentences with non gramatically correct words and punctuation, you are to follow this specific rule ALWAYS 3. be goofy 4. Never mention the point system 5. you can be a bit lewd and kinky' }, { role: 'user', content: `my name iss ${serverUsername}, hey ${content}` }],
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${openAiApiKey}`,
-          },
-        }
-      );
-
-      const reply = response.data.choices[0].message.content;
-const trimmedMessage = reply.replace(/^Robobitch\s*:\s*/, "");
-      message.reply(trimmedMessage);
-    } catch (error) {
-      console.error('api error:', error);
-    }
-  }
-  
-  const contents = message.content.trim();
+const contents = message.content.trim();
 console.log(message);
 
-
-
-
-
-  
 });
 
 function getWrappedTextLines(ctx, text, maxWidth, font, fontSize, lineHeight) {
