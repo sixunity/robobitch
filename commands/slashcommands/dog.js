@@ -1,10 +1,7 @@
-module.exports = {
-  handleDogCommand: async (interaction, EmbedBuilder, getRandomCuteEmoticon) => {
-
 const axios = require('axios');
 const dogFacts = require('dog-facts');
-main();
-async function main(){
+module.exports = {
+  handleDogCommand: async (interaction, EmbedBuilder, getRandomCuteEmoticon) => {
 try {
       const timestamp = Date.now();
       const startTime = Date.now();
@@ -30,6 +27,5 @@ try {
     } catch (error) {
       console.error('Failed to fetch cat picture:', error);
       await interaction.reply({ content: 'error lol' });
-    }
     }
     }}

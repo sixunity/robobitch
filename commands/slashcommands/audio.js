@@ -1,6 +1,7 @@
+  const ytdl = require('ytdl-core');
 module.exports = {
   handlePlayCommand: async (interaction) => {
-  const ytdl = require('ytdl-core');
+
   const { joinVoiceChannel, createAudioPlayer, createAudioResource, NoSubscriberBehavior, StreamType } = require('@discordjs/voice');
 
   const youtubeLink = interaction.options.getString('link');

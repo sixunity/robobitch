@@ -1,8 +1,6 @@
+const axios = require('axios');
 module.exports = {
   handleFoodCommand: async (interaction, EmbedBuilder, config) => {
-const axios = require('axios');
-main();
-async function main(){
 try {
       const timestamp = Date.now();
       const startTime = Date.now();
@@ -90,6 +88,6 @@ while (num < response.data.length) {
       await interaction.reply({ content: 'oopsie' });
 
     }
-    }
+    
     
     }}

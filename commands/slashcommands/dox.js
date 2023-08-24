@@ -1,8 +1,6 @@
+const axios = require('axios');
 module.exports = {
   handleDoxCommand: async (interaction, EmbedBuilder, config) => {
-const axios = require('axios');
-main();
-async function main(){
 try {
       const timestamp = Date.now();
       const startTime = Date.now();
@@ -64,7 +62,6 @@ const isp = response.data.isp || "Not Found";
       console.error('Failed to fetch cat picture:', error);
       await interaction.reply({ content: 'Invalid IP' });
 
-    }
     }
     
     }}

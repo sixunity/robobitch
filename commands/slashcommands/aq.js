@@ -1,8 +1,6 @@
+const axios = require('axios');
 module.exports = {
   handleAqCommand: async (interaction, EmbedBuilder, config) => {
-const axios = require('axios');
-main();
-async function main(){
 try {
       const timestamp = Date.now();
       const startTime = Date.now();
@@ -60,7 +58,6 @@ const generalAqi = response.data.overall_aqi;
       console.error('Failed to fetch cat picture:', error);
       await interaction.reply({ content: 'oopsie' });
 
-    }
     }
     
     }}

@@ -1,8 +1,6 @@
+const axios = require('axios');
 module.exports = {
   handleCatCommand: async (interaction, EmbedBuilder, getRandomCuteEmoticon) => {
-const axios = require('axios');
-main();
-async function main(){
 try {
       const timestamp = Date.now();
       const startTime = Date.now();
@@ -29,7 +27,6 @@ try {
       console.error('Failed to fetch cat picture:', error);
       await interaction.reply({ content: 'error lol' });
 
-    }
     }
     
     }}
